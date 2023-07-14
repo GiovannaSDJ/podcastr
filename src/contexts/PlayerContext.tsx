@@ -12,6 +12,8 @@ type PlayerContextData = {
   episodeList: Episode[];
   currentEpisodeIndex: number;
   isPlaying: boolean;
+  isLooping: boolean;
+  isShuffling: boolean;
   hasNext: boolean;
   hasPrevious: boolean;
   play: (episode: Episode) => void;
@@ -19,6 +21,8 @@ type PlayerContextData = {
   playNext: () => void;
   playPrevious: () => void;
   togglePlay: () => void;
+  toggleLoop: () => void;
+  toggleShuffle: () => void;
   setPlayingState: (state: boolean) => void;
 };
 
@@ -34,6 +38,8 @@ export const PlayerContextProvider = ({
   const [episodeList, setEpisodeList] = useState<Episode[]>([]);
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
 
   const play = (episode: Episode) => {
     setEpisodeList([episode]);
@@ -42,6 +48,9 @@ export const PlayerContextProvider = ({
   };
 
   const playList = (list: Episode[], index: number) => {
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA", list);
+    console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBB", index);
+
     setEpisodeList(list);
     setCurrentEpisodeIndex(index);
     setIsPlaying(true);
@@ -49,6 +58,14 @@ export const PlayerContextProvider = ({
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const toggleLoop = () => {
+    setIsLooping(!isLooping);
+  };
+
+  const toggleShuffle = () => {
+    setIsShuffling(!isShuffling);
   };
 
   const setPlayingState = (state: boolean) => {
@@ -59,10 +76,13 @@ export const PlayerContextProvider = ({
   const hasNext = currentEpisodeIndex + 1 < episodeList.length;
 
   const playNext = () => {
-    const nextEpisodeIndex = currentEpisodeIndex + 1;
-
-    if (hasNext) {
-      setCurrentEpisodeIndex(nextEpisodeIndex);
+    if (isShuffling) {
+      const nextRandomEpisodeIndex = Math.floor(
+        Math.random() * episodeList.length
+      );
+      setCurrentEpisodeIndex(nextRandomEpisodeIndex);
+    } else if (hasNext) {
+      setCurrentEpisodeIndex(currentEpisodeIndex + 1);
     }
   };
 
@@ -77,9 +97,13 @@ export const PlayerContextProvider = ({
       value={{
         episodeList,
         currentEpisodeIndex,
-        play,
         isPlaying,
+        isLooping,
+        isShuffling,
+        play,
         togglePlay,
+        toggleLoop,
+        toggleShuffle,
         setPlayingState,
         playList,
         playNext,
