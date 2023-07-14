@@ -9,7 +9,7 @@ import "rc-slider/assets/index.css";
 import { convertDurationToTimeString } from "@/utils/convertDurationToTimeString";
 
 const Player = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | any>(null);
   const [progress, setProgress] = useState(0);
 
   const setupProgressListener = () => {
@@ -17,6 +17,19 @@ const Player = () => {
     audioRef.current?.addEventListener("timeupdate", () => {
       setProgress(Math.floor(audioRef.current?.currentTime ?? 0));
     });
+  };
+
+  const handleSeek = (amount: number) => {
+    audioRef.current.currentTime = amount;
+    setProgress(amount);
+  };
+
+  const handleEpisodeEnded = () => {
+    if (hasNext) {
+      playNext();
+    } else {
+      clearPlayerState();
+    }
   };
 
   const {
@@ -29,6 +42,7 @@ const Player = () => {
     toggleLoop,
     toggleShuffle,
     setPlayingState,
+    clearPlayerState,
     hasPrevious,
     playPrevious,
     hasNext,
@@ -77,6 +91,7 @@ const Player = () => {
               <Slider
                 max={episode.duration}
                 value={progress}
+                onChange={handleSeek}
                 trackStyle={{ background: "#04D361" }}
                 railStyle={{ background: "#9F75FF" }}
                 handleStyle={{ borderColor: "#04D361", borderWidth: 4 }}
@@ -94,6 +109,7 @@ const Player = () => {
             src={episode.url}
             ref={audioRef}
             loop={isLooping}
+            onEnded={handleEpisodeEnded}
             onPlay={() => {
               setPlayingState(true);
             }}
