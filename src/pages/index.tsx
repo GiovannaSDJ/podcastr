@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import Head from "next/head";
 
-import api from "@/services/api";
-import { format, parseISO } from "date-fns";
-import ptBR from "date-fns";
-import { convertDurationToTimeString } from "@/utils/convertDurationToTimeString";
-import styles from "./home.module.scss";
 import { usePlayer } from "@/contexts/PlayerContext";
+import api from "@/services/api";
+import { convertDurationToTimeString } from "@/utils/convertDurationToTimeString";
+import ptBR, { format, parseISO } from "date-fns";
+import styles from "./home.module.scss";
 
 type Episode = {
   id: string;

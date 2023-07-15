@@ -24,6 +24,7 @@ type PlayerContextData = {
   toggleLoop: () => void;
   toggleShuffle: () => void;
   setPlayingState: (state: boolean) => void;
+  setIsShuffling: (state: boolean) => void;
   clearPlayerState: () => void;
 };
 
@@ -110,6 +111,7 @@ export const PlayerContextProvider = ({
         toggleLoop,
         toggleShuffle,
         setPlayingState,
+        setIsShuffling,
         playList,
         playNext,
         playPrevious,

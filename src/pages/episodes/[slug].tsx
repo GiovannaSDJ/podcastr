@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import api from "@/services/api";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { convertDurationToTimeString } from "@/utils/convertDurationToTimeString";
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { convertDurationToTimeString } from "@/utils/convertDurationToTimeString";
+import { GetStaticPaths, GetStaticProps } from "next";
 
-import styles from "./episode.module.scss";
-import Image from "next/image";
-import Link from "next/link";
 import { usePlayer } from "@/contexts/PlayerContext";
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import styles from "./episode.module.scss";
 
 type Episode = {
   id: string;
@@ -28,7 +28,7 @@ type EpisodeProps = {
 };
 
 const Episode = ({ episode }: EpisodeProps) => {
-  const { play } = usePlayer();
+  const { clearPlayerState, play, setIsShuffling } = usePlayer();
 
   return (
     <div className={styles.episode}>
@@ -50,7 +50,11 @@ const Episode = ({ episode }: EpisodeProps) => {
         <button
           type="button"
           className={styles.lastChild}
-          onClick={() => play(episode)}
+          onClick={() => {
+            setIsShuffling(false);
+            clearPlayerState();
+            play(episode);
+          }}
         >
           <img src="/play.svg" alt="Tocar episódio" />
         </button>

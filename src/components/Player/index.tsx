@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 import { usePlayer } from "@/contexts/PlayerContext";
+import Image from "next/image";
 import Slider from "rc-slider";
+import { useEffect, useRef, useState } from "react";
 
-import styles from "./styles.module.scss";
-import "rc-slider/assets/index.css";
 import { convertDurationToTimeString } from "@/utils/convertDurationToTimeString";
+import "rc-slider/assets/index.css";
+import styles from "./styles.module.scss";
 
 const Player = () => {
   const audioRef = useRef<HTMLAudioElement | any>(null);
@@ -19,9 +19,11 @@ const Player = () => {
     });
   };
 
-  const handleSeek = (amount: number) => {
-    audioRef.current.currentTime = amount;
-    setProgress(amount);
+  const handleSeek = (amount: number | number[]) => {
+    if (typeof amount === "number") {
+      audioRef.current.currentTime = amount;
+      setProgress(amount);
+    }
   };
 
   const handleEpisodeEnded = () => {
